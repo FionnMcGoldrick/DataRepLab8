@@ -47,6 +47,16 @@ app.post('/api/movies',async (req, res)=>{
     res.status(201).json({"message":"Movie Added!",Movie:newMovie});
 })
 
+app.get('/api/movie/:id', async (req, res) => {
+  let movie = await movieModel.findById({ _id: req.params.id });
+  res.send(movie);
+});
+
+app.put('/api/movie/:id', async (req, res) => {
+  let movie = await movieModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.send(movie);
+});
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
