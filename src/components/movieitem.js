@@ -4,19 +4,27 @@ import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 
+const MovieItem = (props) => {
 
-const MovieItem = (props)=> {
+  // Optional debugging log - can be removed in production
   useEffect(() => {
     console.log("Movie Item:", props.mymovie);
-  }, [props.mymovie]); // Only run this effect when the mymovie prop changes
+  }, [props.mymovie]);
 
-  const handleDelete = (e)=>{
+  const handleDelete = (e) => {
     e.preventDefault();
-
-    axios.delete('http://localhost:4000/api/movie/' + props.mymovie._id)
-    .then()
-    .catch();
-  }
+    const confirmDelete = window.confirm('Are you sure you want to delete this movie?');
+    if (confirmDelete) {
+      axios.delete('http://localhost:4000/api/movie/' + props.mymovie._id)
+        .then(() => {
+          console.log('Movie deleted successfully');
+          // Optionally trigger a parent component to remove this item from the list
+        })
+        .catch((error) => {
+          console.error('Error deleting movie:', error);
+        });
+    }
+  };
 
   return (
     <div>
@@ -24,16 +32,16 @@ const MovieItem = (props)=> {
         <Card.Header>{props.mymovie.title}</Card.Header>
         <Card.Body>
           <blockquote className="blockquote mb-0">
-            <img src={props.mymovie.poster} alt={props.mymovie.title} />
+            <img src={props.mymovie.poster} alt={props.mymovie.title} style={{ width: '100%', height: 'auto' }} />
             <footer>{props.mymovie.year}</footer>
           </blockquote>
         </Card.Body>
         <Link className="btn btn-primary" to={"/edit/" + props.mymovie._id}>Edit</Link>
-        <br></br>
-        <Button className = "btn btn-danger" onClick={handleDelete}>Delete</Button>
+        <br />
+        <Button className="btn btn-danger" onClick={handleDelete}>Delete</Button>
       </Card>
     </div>
   );
-}
+};
 
 export default MovieItem;
