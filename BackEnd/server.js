@@ -51,6 +51,7 @@ app.get('/api/movie/:id', async (req, res) => {
   res.json(movie);
 });
 
+
 // Route to create a new movie by sending a POST request with movie data in the body
 app.post('/api/movies', async (req, res) => {
     console.log(req.body.title); // Log the title of the movie from the request body (for debugging)
@@ -81,3 +82,13 @@ app.put('/api/movie/:id', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`); 
 });
+
+//Handle Delete
+app.delete('/api/movie/:id', async (req, res) => {
+  
+  console.log('Deleting movie with ID:', req.params.id);
+  const movie = await movieModel.findByIdAndDelete(req.params.id);
+  res.status(200).send({ message: "Movie deleted successfully", movie });
+  
+});
+
